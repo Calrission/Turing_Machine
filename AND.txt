@@ -1,0 +1,8 @@
+q0 1 1 R q1
+q1 _ _ R q1
+q1 0 0 R q2
+q1 1 1 R q3
+q2 _ _ R q4
+q4 _ 0 S q6
+q3 _ _ R q5
+q5 _ 1 S q6
