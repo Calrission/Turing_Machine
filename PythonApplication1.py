@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 
+
 class TuringMachine:
     def __init__(self):
         self.tape = [' '] * 30  # Лента машины Тьюринга с начальными пробелами
@@ -46,11 +47,12 @@ class TuringMachine:
                 self.move_right()
 
             self.state = new_state  # Обновляем состояние машины
-    
+
     def reset_machine(self):
         self.tape = [' '] * 30
         self.position = 0
         self.state = 'q0'
+
 
 class TuringMachineGUI:
     def __init__(self, root):
@@ -71,8 +73,8 @@ class TuringMachineGUI:
         self.update_tape_label()
 
         self.head_rect = None  # Прямоугольник для головки
-        
-        # фрейм для кнопок 
+
+        # фрейм для кнопок
         self.button_frame = tk.Frame(root, bg="white")
         self.button_frame.pack()
 
@@ -92,14 +94,11 @@ class TuringMachineGUI:
         self.write_button_blank.pack(side="left", padx=5)
 
         self.erase_button = tk.Button(self.button_frame, text="Стереть", command=self.erase, bg="white")
-        
+
         self.reset_button = tk.Button(self.button_frame, text="Сброс", command=self.reset_machine, bg="white")
         self.reset_button.pack(side="left", padx=5)
 
-        
         self.erase_button.pack(side="left", padx=5)
-        
-
 
         self.input_label = tk.Label(root, text="Введите последовательность:")
         self.input_label.pack()
@@ -116,7 +115,9 @@ class TuringMachineGUI:
         self.transition_table_label = ttk.Label(self.transition_table_frame, text="Таблица переходов:")
         self.transition_table_label.pack()
 
-        self.transition_tree = ttk.Treeview(self.transition_table_frame, columns=("state", "symbol", "new_symbol", "move", "new_state"), show="headings")
+        self.transition_tree = ttk.Treeview(self.transition_table_frame,
+                                            columns=("state", "symbol", "new_symbol", "move", "new_state"),
+                                            show="headings")
         self.transition_tree.heading("state", text="Состояние")
         self.transition_tree.heading("symbol", text="Символ")
         self.transition_tree.heading("new_symbol", text="Новый символ")
@@ -127,30 +128,29 @@ class TuringMachineGUI:
         self.add_rule_button = tk.Button(root, text="Добавить правило", command=self.add_transition_rule, bg="white")
         self.add_rule_button.pack(side="left", padx=5)
 
-        self.remove_rule_button = tk.Button(root, text="Удалить правило", command=self.remove_transition_rule, bg="white")
+        self.remove_rule_button = tk.Button(root, text="Удалить правило", command=self.remove_transition_rule,
+                                            bg="white")
         self.remove_rule_button.pack(side="left", padx=5)
-        
+
         self.load_rules_button = tk.Button(root, text="Загрузить правила из файла", command=self.load_rules, bg="white")
         self.load_rules_button.pack(side="left", padx=5)
 
         self.step_button = tk.Button(root, text="Выполнить шаг", command=self.execute_step, bg="white")
         self.step_button.pack(side="left", padx=5)
-        
 
-        
         self.change_to_windows_style()
-        
 
     def change_to_windows_style(self):
         self.root.style = ttk.Style()
-        self.root.style.theme_use('vista')  # Используйте 'vista' или 'winnative' в зависимости от вашей версии Tkinter
+        self.root.style.theme_use('alt')
 
         # фоновый цвет окна и виджетов на белый
         self.root.configure(bg="white")
         self.input_label.configure(bg="white")
         self.state_label.configure(bg="white")
         self.label.configure(bg="white")
-      #  self.right_button.configure(style="TButton", font=("Segoe UI", 10))
+
+    #  self.right_button.configure(style="TButton", font=("Segoe UI", 10))
 
     def reset_machine(self):
         self.turing_machine.reset_machine()
@@ -166,14 +166,13 @@ class TuringMachineGUI:
                         state, symbol, new_symbol, move, new_state = parts
                         self.turing_machine.add_transition_rule(state, symbol, new_symbol, move, new_state)
         except FileNotFoundError:
-            print(f"Файл {filename} не найден.")    
-            
+            print(f"Файл {filename} не найден.")
+
     def load_rules(self):
         filename = tk.filedialog.askopenfilename(filetypes=[("Text files", "*.txt")])
         if filename:
             self.load_transition_rules(filename)
             self.update_transition_table()
-
 
     def move_left(self):
         self.turing_machine.move_left()
@@ -182,7 +181,6 @@ class TuringMachineGUI:
     def move_right(self):
         self.turing_machine.move_right()
         self.update_tape_label()
-        
 
     def write_1(self):
         self.turing_machine.write('1')
@@ -272,12 +270,14 @@ class TuringMachineGUI:
         tape_str = ''.join(self.turing_machine.tape)
         self.tape_label.config(text=tape_str)
         head_position = self.turing_machine.position
-        self.tape_label.config(text=tape_str[:head_position] + '[' + tape_str[head_position] + ']' + tape_str[head_position + 1:])
+        self.tape_label.config(
+            text=tape_str[:head_position] + '[' + tape_str[head_position] + ']' + tape_str[head_position + 1:])
 
     def update_transition_table(self):
         self.transition_tree.delete(*self.transition_tree.get_children())
         for (state, symbol), (new_symbol, move, new_state) in self.turing_machine.transition_table.items():
             self.transition_tree.insert("", "end", values=(state, symbol, new_symbol, move, new_state))
+
 
 if __name__ == "__main__":
     root = tk.Tk()
